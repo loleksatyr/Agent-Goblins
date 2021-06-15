@@ -42,3 +42,8 @@ Goblinz/Library/ArtifactDB
 *.log
 Goblinz/Library/ArtifactDB
 Goblinz/Library/SourceAssetDB
+*.dwlt
+*.log
+Goblinz/Library/CurrentLayout-default.dwlt
+Goblinz/Library/shadercompiler-UnityShaderCompiler.exe0.log
+Goblinz/Library/SourceAssetDB
