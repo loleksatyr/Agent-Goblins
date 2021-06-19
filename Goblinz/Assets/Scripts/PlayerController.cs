@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,10 +11,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float jump;
     private Rigidbody2D rigidbody;
     [SerializeField] bool isgrounded;
+    [SerializeField] int coins = 0;
+    [SerializeField] Text _coinsText;
+    [SerializeField] bool _enemynear;
+    [SerializeField] bool damage;
+    [SerializeField] int Health = 3;
+    [SerializeField] GameObject attackleft;
+    [SerializeField] GameObject attackright;
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         rigidbody = GetComponent<Rigidbody2D>();
+        attackleft.SetActive(false);
+        attackright.SetActive(false);
     }
     private void Update()
     {
@@ -26,16 +36,19 @@ public class PlayerController : MonoBehaviour
             _playeranimator.SetBool("Move", true);
             transform.position += Vector3.right * moveSpeed * Time.deltaTime;
             spriteRenderer.flipX = false;
+            _playeranimator.SetBool("Attack", false);
         }
         else if (Input.GetKey(KeyCode.A))
         {
             _playeranimator.SetBool("Move", true);
             transform.position += Vector3.right * -moveSpeed * Time.deltaTime;
             spriteRenderer.flipX = true;
+            _playeranimator.SetBool("Attack", false);
         }
         else
         {
             _playeranimator.SetBool("Move", false);
+            _playeranimator.SetBool("Attack", false);
         }
         if (Input.GetKeyDown(KeyCode.Space)  || Input.GetKeyDown(KeyCode.W))
         {
@@ -49,6 +62,24 @@ public class PlayerController : MonoBehaviour
             
 
         }
+        if (Input.GetKey(KeyCode.P))
+        {
+            _playeranimator.SetBool("Attack", true);
+            if (spriteRenderer.flipX == true)
+            {
+                attackleft.SetActive(true);
+                attackright.SetActive(false);
+            }
+            else {
+                attackright.SetActive(true);
+                attackleft.SetActive(false);
+            }
+        }
+        else {
+            attackleft.SetActive(false);
+            attackright.SetActive(false);
+        }
+            _coinsText.text = coins.ToString();
       
         
 
@@ -61,7 +92,24 @@ public class PlayerController : MonoBehaviour
             isgrounded = true;
             _playeranimator.SetBool("Jump", false);
         }
+        if (collision.gameObject.tag == "Coin")
+        {
+            Destroy(collision.gameObject);
+            coins++;
 
+        }
+        if (collision.gameObject.tag == "Enemy") {
+            if (spriteRenderer.flipX == true)
+            {
+                rigidbody.AddForce(Vector2.right * jump / 2, ForceMode2D.Impulse);
+            }
+            else if (spriteRenderer.flipX == false) {
+                rigidbody.AddForce(Vector2.left * jump / 2, ForceMode2D.Impulse);
+            }
+            
+            Health--;
+
+        }
     }
  
 }
