@@ -10,6 +10,7 @@ public class EnemyController : MonoBehaviour
    [SerializeField] int health = 2;
     Animator animator;
     bool isdead = false;
+    [SerializeField] GameObject _coinprefab;
 
     SpriteRenderer spriteRenderer;
     void Start()
@@ -21,24 +22,34 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isdead == false)
+        if (points.Length == 0 || points.Length == 1)
         {
-            if (edge)
+            animator.SetBool("Idle", true);
+        }
+        else
+        {
+            if (isdead == false)
             {
-                transform.position -= Vector3.right * moveSpeed * Time.deltaTime;
-                spriteRenderer.flipX = true;
-            }
-            else
-            {
-                transform.position += Vector3.right * moveSpeed * Time.deltaTime;
-                spriteRenderer.flipX = false;
+                if (edge)
+                {
+                    transform.position -= Vector3.right * moveSpeed * Time.deltaTime;
+                    spriteRenderer.flipX = true;
+                }
+                else
+                {
+                    transform.position += Vector3.right * moveSpeed * Time.deltaTime;
+                    spriteRenderer.flipX = false;
+                }
             }
         }
         if (health == 0) {
             animator.SetBool("Die",true);
+
             isdead = true;
             Invoke("Disappear",1f);
+            health--;
         }
+       
     }
  
     private void OnTriggerEnter2D(Collider2D collision)
@@ -62,5 +73,8 @@ public class EnemyController : MonoBehaviour
     }
     private void Disappear() {
         gameObject.SetActive(false);
+        Instantiate(_coinprefab, transform.position, Quaternion.identity);
+ 
+
     }
 }
