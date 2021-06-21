@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject attackleft;
     [SerializeField] GameObject attackright;
     [SerializeField] GameObject[] Healthtab;
+    [SerializeField] Text MassageBox;
     private bool isdead = false;
     private void Start()
     {
@@ -28,6 +30,7 @@ public class PlayerController : MonoBehaviour
         attackright.SetActive(false);
         Health = Healthtab.Length-1;
         Debug.Log(Health);
+        MassageBox.gameObject.SetActive(false);
     }
     private void Update()
     {
@@ -90,11 +93,18 @@ public class PlayerController : MonoBehaviour
                 attackright.SetActive(false);
             }
         }
+        if (Input.GetKey(KeyCode.R)) {
+            Restart();
+        }
             _coinsText.text = coins.ToString();
         if (Health < 0) {
             Die();
+            MessageBoxShow("You died! Press R to respawn!");
         }
-      
+        if (coins >= 10) {
+            MessageBoxShow("You did it! Congrats and see you soon");
+            Invoke("Restart",5f);
+        }
         
 
 
@@ -128,6 +138,14 @@ public class PlayerController : MonoBehaviour
     private void Die() {
         isdead = true;
         _playeranimator.SetBool("Dead", true);
+    }
+    private void MessageBoxShow(string massage) {
+        MassageBox.gameObject.SetActive(true);
+        MassageBox.text = massage;
+    }
+    private void Restart() {
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.name);
     }
  
 }

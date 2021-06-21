@@ -58,9 +58,7 @@ public class EnemyController : MonoBehaviour
         if (collision.gameObject.tag == "point")
         {
             edge = !edge;
-            Debug.Log(edge);
         }
-        Debug.Log("trigger");
 
         if (collision.gameObject.tag == "Damage")
         {
